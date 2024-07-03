@@ -1,52 +1,75 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Alert , TextInput} from 'react-native';
 import { Colors } from '../../theme/color';
-import { widthPercentageToDP as scaleWidth } from 'react-native-responsive-screen';
-import { Container, Content, Input, Item, NativeBaseProvider } from 'native-base';
-import { RectangleButton } from '../components/RectangleButton';
-import {withIAPContext} from 'react-native-iap';  
+import { widthPercentageToDP as scaleWidth, heightPercentageToDP as scaleHeight } from 'react-native-responsive-screen';
+import { RectangleButton } from '../components/RectangleButton'; 
+import { registerUser } from '../hooks';
 
 
 const Register = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
-  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+  // const [emailError, setEmailError] = useState(false);
+  // const [passwordError, setPasswordError] = useState(false);
+  // const [confirmPasswordError, setConfirmPasswordError] = useState(false);
 
-  const handleSubmit = () => {
-    let valid = true;
-    setEmailError(false);
-    setPasswordError(false);
-    setConfirmPasswordError(false);
 
-    if (email.length === 0) {
-      setEmailError(true);
-      valid = false;
-    }
-    if (password.length === 0) {
-      setPasswordError(true);
-      valid = false;
-    }
-    if (confirmPassword.length === 0) {
-      setConfirmPasswordError(true);
-      valid = false;
-    }
-    if (password !== confirmPassword) {
-      setPasswordError(true);
-      setConfirmPasswordError(true);
-      valid = false;
-    }
 
-    if (valid) {
-      // Perform registration logic here
-      navigation.navigate('Login');
+  // const handleSubmit = () => {
+  //   let valid = true;
+  //   setEmailError(false);
+  //   setPasswordError(false);
+  //   setConfirmPasswordError(false);
+
+  //   if (email.length === 0) {
+  //     setEmailError(true);
+  //     valid = false;
+  //   }
+  //   if (password.length === 0) {
+  //     setPasswordError(true);
+  //     valid = false;
+  //   }
+  //   if (confirmPassword.length === 0) {
+  //     setConfirmPasswordError(true);
+  //     valid = false;
+  //   }
+  //   if (password !== confirmPassword) {
+  //     setPasswordError(true);
+  //     setConfirmPasswordError(true);
+  //     valid = false;
+  //   }
+
+  //   if (valid) {
+  //     // Perform registration logic here
+  //     navigation.navigate('Login');
+  //   }
+  // };
+
+  const handleSubmit = async () => {
+
+    if(password == confirmPassword){
+    const reg = await registerUser({
+      username: email,
+      password: password
+      
+    });
+    if (reg.success == true)
+      {
+        navigation.navigate('Main')
+      }
+      else{
+        Alert.alert('Something wrong, please contact admin')
+      }
+  }
+    else{
+      Alert.alert('Something wrong, please contact admin')
     }
-  };
+  
+  }
 
   return (
-    <NativeBaseProvider>
+
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -57,10 +80,10 @@ const Register = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       <View style={styles.body}>
-        <View style={styles.subBody}>
+        {/* <View style={styles.subBody}>
           <Image source={require('../../assets/images/Name.png')} />
     
-            <Input
+            <TextInput
               maxLength={30}
               style={styles.input}
               placeholder={'Your Name'}
@@ -68,11 +91,11 @@ const Register = ({ navigation }) => {
               autoCapitalize="none"
             />
    
-        </View>
+        </View> */}
         <View style={styles.subBody}>
           <Image source={require('../../assets/images/mail.png')} />
 
-            <Input
+            <TextInput
               maxLength={30}
               style={styles.input}
               placeholder={'Email Address'}
@@ -86,8 +109,8 @@ const Register = ({ navigation }) => {
         </View>
         <View style={styles.subBody}>
           <Image source={require('../../assets/images/lock.png')} />
-          <Item error={passwordError}>
-            <Input
+       
+            <TextInput
               maxLength={30}
               style={styles.input}
               placeholder={'Password'}
@@ -98,12 +121,12 @@ const Register = ({ navigation }) => {
               onChangeText={setPassword}
               value={password}
             />
-          </Item>
+          
         </View>
         <View style={styles.subBody}>
           <Image source={require('../../assets/images/lock.png')} />
           
-            <Input
+            <TextInput
               maxLength={30}
               style={styles.input}
               placeholder={'ReEnter Password'}
@@ -128,13 +151,13 @@ const Register = ({ navigation }) => {
           onPress={handleSubmit}
           buttonColor={Colors.button}
           title="Register"
-          onpress={()=>navigation.pop()}
+          onpress={()=>handleSubmit()}
           recWidth={300}
           recBorderColor={Colors.button}
         />
       </View>
     </View>
-    </NativeBaseProvider>
+
   );
 };
 
@@ -155,7 +178,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   body: {
-    flex: 0.5,
+    marginTop:scaleHeight(10),
+    flex: .5,
     justifyContent: 'center',
     flexDirection: 'column',
     alignContent: 'center',
