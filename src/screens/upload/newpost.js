@@ -39,6 +39,8 @@ export default function NewPostScreen ({navigation,route}) {
     
     const {image, id, length} = route.params;
     const [thumbnailUrl, setThumbnailUrl] = useState(image)
+
+
     return (
       <View style={styles.container}>
         <View style={styles.header}>     

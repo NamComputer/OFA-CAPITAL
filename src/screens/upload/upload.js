@@ -21,51 +21,61 @@ const DATA = [
     id:3
   },
 ];
+//Old history screen
+// export default function UploadHistory() {
+//   return (
+//       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+//         <View style={styles.container}>
+    
+//           {/* const { goToScreen, goToBack } = useNavigation(); */}
+//           {/* console.log(getData) */}
+//             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+//                 <View style={styles.container}>
+//                     <Text style={styles.text}>
+//                         {DATA.length < 1?<Text style={styles.noHistory}>You Have No Story</Text>:
+//                         <View>
+//                         <Text style={styles.headerTitle}>History</Text>
+//                         <Text style={styles.subTitle}>{format(new Date(),'MMM do, yyyy')}</Text>          
+//                         <FlatList
+//                         data={DATA}
+//                         renderItem={({item}) =>(
+//                           <View style={styles.item}>
+//                             <Text style={styles.title}>{item.status}</Text>
+//                             <Text style={styles.title}>{item.timeStamp}</Text>
+//                           </View>
+//                         )}
+//                         keyExtractor={(item) => item.id}
+//                         // extraData={selectedId}
+//                         />
+//                         </View>
+//                         }
+//                     </Text>
+      
+//               </View>
+//             </TouchableWithoutFeedback>
+//         </View>
+      
+//       </TouchableWithoutFeedback>
+//   );
+// }
 
 export default function UploadHistory() {
   return (
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+ 
         <View style={styles.container}>
-    
-          {/* const { goToScreen, goToBack } = useNavigation(); */}
-          {/* console.log(getData) */}
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={styles.container}>
-                    <Text style={styles.text}>
-                        {DATA.length < 1?<Text style={styles.noHistory}>You Have No Story</Text>:
-                        <View>
-                        <Text style={styles.headerTitle}>History</Text>
-                        <Text style={styles.subTitle}>{format(new Date(),'MMM do, yyyy')}</Text>          
-                        <FlatList
-                        data={DATA}
-                        renderItem={({item}) =>(
-                          <View style={styles.item}>
-                            <Text style={styles.title}>{item.status}</Text>
-                            <Text style={styles.title}>{item.timeStamp}</Text>
-                          </View>
-                        )}
-                        keyExtractor={(item) => item.id}
-                        // extraData={selectedId}
-                        />
-                        </View>
-                        }
-                    </Text>
-      
-              </View>
-            </TouchableWithoutFeedback>
+          <Text style={styles.text}>Feature Coming Soon!</Text>
+          <Text style={styles.subText}>Stay tuned for updates.</Text>
+            
         </View>
       
-      </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 20,
-    flexDirection: "column",
-    marginTop: 4,
-    alignItems:'center'
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   headerTitle: {
     fontSize: 40,

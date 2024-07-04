@@ -6,7 +6,8 @@ import React, { useState } from 'react';
 import { RectangleButton } from '../components/RectangleButton';
 import  Register  from '../register/register';
 
-import {getUser} from '../hooks';
+import {getUser, posUser} from '../hooks';
+import { storeData } from '../helpers/asyncStorage';
 
 
 
@@ -14,7 +15,7 @@ import {getUser} from '../hooks';
 export function Login ({navigation}) {
 
   const checkUser = async () => {
-    const login = await getUser({
+    const login = await posUser({
       username: user,
       password: password
       
@@ -25,6 +26,7 @@ export function Login ({navigation}) {
         loading(false)
       }
       else{
+        storeData('login',login.data)
         navigation.navigate('Main')
         loading(false)
       }

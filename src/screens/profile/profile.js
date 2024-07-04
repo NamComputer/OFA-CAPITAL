@@ -7,17 +7,37 @@ import { Colors } from '../theme/color';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
+import {getUser, posUser} from '../hooks';
+import { getData } from '../helpers/asyncStorage';
+import { useEffect, useState } from 'react';
+
 export default function Profile({navigation}) {
+  const [profile,setProfile] = useState()
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userInfo = await getUser();
+        if (userInfo.data !== null) {
+          setProfile(userInfo.data.username);
+        }
+      } catch (e) {
+        console.error('Error fetching user info:', e);
+      }
+    };
+
+    fetchUser();
+
+  },[])
   return (
     
     <View style={styles.container}>   
       <View style={styles.header}>
-        
+        <View/>
           <View style={styles.headerChild}>  
-          
               <Text style={styles.headerTitle}>My Profile</Text>          
               <Image style={styles.imageProfile} source={{uri:USER[1].image}} /> 
-              <Text style={styles.subHeaderTitle}>{USER[1].user}</Text>
+              <Text style={styles.subHeaderTitle}>Have a nice day! Mr/Mrs {profile}</Text>
           </View>
           <TouchableOpacity onPress={()=> Alert.alert('You pressed edit') }>
               <Image style={styles.imageIcon} source={require('../../assets/images/EditIcon.png')}/>
@@ -74,9 +94,9 @@ const styles = StyleSheet.create({
   },
   headerChild:{
     flexDirection:'column',
+    alignContent: 'center',
     alignItems:'center',
     alignSelf:'center',
-    marginLeft: windowWidth/3
   },
   headerTitle:{
     color:Colors.dark,
@@ -88,6 +108,8 @@ const styles = StyleSheet.create({
     color:Colors.dark,
     fontSize:16,
     fontWeight:'300',
+    alignItems:'center',
+    alignSelf:'center',
   },
   headerComponent:{
     flexDirection:'row',
@@ -97,6 +119,5 @@ const styles = StyleSheet.create({
   },
   imageIcon:{
     marginBottom:200,
-    marginRight:25
   }
 });
