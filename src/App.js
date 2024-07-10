@@ -51,8 +51,9 @@ const Main = () => {
     <Stack.Navigator 
     //initialRouteName="Main"
     options={{ headerShown: false }}>
-      <Stack.Screen name="Home" component={Home} options={{ headerShown: false }}/>
+      
       <Stack.Screen name="Login" component={Login} options={{ headerShown: false }}/>
+      <Stack.Screen name="Home" component={Home} options={{ headerShown: false }}/>
       <Stack.Screen name="Main" component={BottomStackScreen}  options={{ headerShown: false }}/>
       <Stack.Screen name="Register" component={Register} options={{ headerShown: false }}/>
       <Stack.Screen name="Scan" component={Scan} options={{ headerShown: false }}/>

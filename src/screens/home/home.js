@@ -1,8 +1,3 @@
-// import Post from '../components/Post';
-// import { POSTS } from '../data/post';
-// import constants from '../../constants/constants';
-// import SetReel from '../components/SetReel'
-
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
@@ -61,7 +56,7 @@ export default function Home ({navigation})  {
   );
 }
 
-// export default function Home ({navigation})  {
+
 
 //   return (
 //     <View style={styles.container}>
