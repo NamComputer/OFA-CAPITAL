@@ -18,7 +18,7 @@ export default function Profile({navigation}) {
     const fetchUser = async () => {
       try {
         const userInfo = await getUser();
-        if (userInfo.data !== null) {
+        if (userInfo.data !== null) {an
           setProfile(userInfo.data.username);
         }
       } catch (e) {
@@ -36,7 +36,7 @@ export default function Profile({navigation}) {
         <View/>
           <View style={styles.headerChild}>  
               <Text style={styles.headerTitle}>My Profile</Text>          
-              <Image style={styles.imageProfile} source={{uri:USER[1].image}} /> 
+              <Image style={styles.imageProfile} source={{uri:USER[2].image}} /> 
               <Text style={styles.subHeaderTitle}>Have a nice day! Mr/Mrs {profile}</Text>
           </View>
           <TouchableOpacity onPress={()=> Alert.alert('You pressed edit') }>
