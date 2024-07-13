@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { RectangleButton } from '../components/RectangleButton';
 import  Register  from '../register/register';
 
-import {getUser, posUser} from '../hooks';
+import {getUser, posUserLogin} from '../hooks';
 import { storeData } from '../helpers/asyncStorage';
 
 
@@ -15,21 +15,27 @@ import { storeData } from '../helpers/asyncStorage';
 export function Login ({navigation}) {
 
   const checkUser = async () => {
-    const login = await posUser({
-      username: user,
+    const login = await posUserLogin({
+      identity: user,
       password: password
       
     });
-    if (login.error == "invalid username or password")
+    if (login.error != null && login.error.status == 401)
       {
-        Alert.alert('invalid username or password')
+        Alert.alert('Invalid username or password!')
         loading(false)
       }
-      else{
+    if (login.data != null)
+      {
         storeData('login',login.data)
         navigation.navigate('Main')
         loading(false)
       }
+      else{
+        Alert.alert('please check again!')
+        loading(false)
+      }
+    console.log('Login result', login)
   }
 
   const [isChecked, setChecked] = useState(false);

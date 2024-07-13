@@ -18,7 +18,7 @@ export default function Profile({navigation}) {
     const fetchUser = async () => {
       try {
         const userInfo = await getUser();
-        if (userInfo.data !== null) {an
+        if (userInfo.data !== null) {
           setProfile(userInfo.data.username);
         }
       } catch (e) {
@@ -36,7 +36,7 @@ export default function Profile({navigation}) {
         <View/>
           <View style={styles.headerChild}>  
               <Text style={styles.headerTitle}>My Profile</Text>          
-              <Image style={styles.imageProfile} source={{uri:USER[2].image}} /> 
+              <Image style={styles.imageProfile} source={{uri:USER[1].image}} /> 
               <Text style={styles.subHeaderTitle}>Have a nice day! Mr/Mrs {profile}</Text>
           </View>
           <TouchableOpacity onPress={()=> Alert.alert('You pressed edit') }>
@@ -44,7 +44,7 @@ export default function Profile({navigation}) {
           </TouchableOpacity>
       </View>
       <View style={styles.body}>
-          <RectangleButton title={'👤　My Info'} onpress={()=>navigation.navigate('EditProfile')} buttonColor={Colors.bottomBar} txtColor={Colors.dark} recBorderColor={Colors.bottomBar} recWidth={300} />
+          <RectangleButton title={'👤　My Purchase'} onpress={()=>navigation.navigate('EditProfile')} buttonColor={Colors.bottomBar} txtColor={Colors.dark} recBorderColor={Colors.bottomBar} recWidth={300} />
           <RectangleButton title={'💼　CV Management'} onpress={()=>Alert.alert('You pressed!')} buttonColor={Colors.bottomBar} recBorderColor={Colors.bottomBar} recWidth={300} />
           <RectangleButton title={'⚙️　Settings'} onpress={()=>Alert.alert('You pressed!')} buttonColor={Colors.bottomBar} recBorderColor={Colors.bottomBar} recWidth={300} />
       </View>

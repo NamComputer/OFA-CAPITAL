@@ -3,8 +3,9 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, Alert , TextInput} fro
 import { Colors } from '../../theme/color';
 import { widthPercentageToDP as scaleWidth, heightPercentageToDP as scaleHeight } from 'react-native-responsive-screen';
 import { RectangleButton } from '../components/RectangleButton'; 
-import { registerUser } from '../hooks';
 
+import { posUserRegiser } from '../hooks';
+import { storeData } from '../helpers/asyncStorage';
 
 const Register = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -49,17 +50,19 @@ const Register = ({ navigation }) => {
   const handleSubmit = async () => {
 
     if(password == confirmPassword){
-    const reg = await registerUser({
+    const reg = await posUserRegiser({
       username: email,
-      password: password
-      
+      password: password,
+       
     });
-    if (reg.success == true)
+    if ((reg.data).length != 0)
       {
-        navigation.navigate('Main')
+        storeData('name')
+        navigation.navigate('Login')
       }
       else{
-        Alert.alert('Something wrong, please contact admin')
+        console.log(String(reg.error.status))
+        Alert.alert(String(reg.error.status),reg.error.detail)
       }
   }
     else{

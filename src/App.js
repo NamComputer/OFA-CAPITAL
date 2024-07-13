@@ -50,8 +50,7 @@ const Main = () => {
   <NavigationContainer>
     <Stack.Navigator 
     //initialRouteName="Main"
-    options={{ headerShown: false }}>
-      
+    options={{ headerShown: false }}>  
       <Stack.Screen name="Login" component={Login} options={{ headerShown: false }}/>
       <Stack.Screen name="Home" component={Home} options={{ headerShown: false }}/>
       <Stack.Screen name="Main" component={BottomStackScreen}  options={{ headerShown: false }}/>

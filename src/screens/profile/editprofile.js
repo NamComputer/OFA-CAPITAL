@@ -21,7 +21,7 @@ const EditProfile = ({navigation}) => {
         <TouchableOpacity onPress={()=>navigation.pop()}>
             <Image style={styles.backArrow} source={require('../../assets/images/chevronleft.png')}/>
         </TouchableOpacity>
-        <Text style={styles.textHeader}>Edit Profile</Text>
+        <Text style={styles.textHeader}>Product List</Text>
       </View>
      
       {/* <View style={styles.body}>
@@ -50,7 +50,7 @@ const EditProfile = ({navigation}) => {
             ) : null}
           </View>
       <View style={styles.footer}>
-          <RectangleButton title={'Save'} buttonColor={Colors.textHeader} recWidth={250} recBorderColor={Colors.textHeader} txtColor={Colors.white}/>
+          {/* <RectangleButton title={'Save'} buttonColor={Colors.textHeader} recWidth={250} recBorderColor={Colors.textHeader} txtColor={Colors.white}/> */}
       </View>
     </View>
   );
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   header: {
-    flex: .3,
+    flex: .1,
     flexDirection:'row',
     alignContent: 'center',
     alignItems: 'center',
@@ -73,16 +73,16 @@ const styles = StyleSheet.create({
     height:'100%'
   },
   body: {
-    flex:.5,
+    flex:.2,
     justifyContent:'center',
     flexDirection:'column',
     alignContent: 'center',
     alignItems: 'center',
-    marginTop:20
+
   },
   footer: {
     flex:.8,
-    marginTop:100,
+
     alignContent: 'center',
     alignItems: 'center',
   },
