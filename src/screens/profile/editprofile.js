@@ -8,13 +8,52 @@ import { RectangleButton } from '../components/RectangleButton';
 import useInAppPurchase from "../hooks/useInAppPurchase"
 import { Button } from 'react-native-paper';
 import {withIAPContext} from 'react-native-iap';  
+import { errorLog } from '../../helpers/logs';
+import React, { useState } from 'react';
+import * as useIAP from 'react-native-iap'
+import {Row} from'../components/Row'
 
 const EditProfile = ({navigation}) => {
+
+  const [success, setSuccess] = useState(false);
+  const itemSKUs = Platform.select({
+    android: ["1stpayment", "2ndpayment"],
+    ios: ["1stpayment_ios", "2ndpayment_ios"]
+  });
+
   const {
     isFullAppPurchased,
     connectionErrorMsg,
     purchaseFullApp,
+
   } = useInAppPurchase()
+
+
+  const {
+    connected,
+    products,
+    getProducts,
+    finishTransaction,
+    currentPurchase,
+    currentPurchaseError
+  } = useIAP;
+
+
+  const [product, setProducts] = useState();
+  const handleGetProducts = async () => {
+    console.log('product', ["1stpayment", "2ndpayment"])
+    try {
+
+      await getProducts({skus: itemSKUs})
+   
+      console.log('get successfully')
+    } catch (error) {
+      errorLog({message: 'handleGetProducts', error});
+    }
+
+  };
+
+  console.log('the products',products)
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -51,6 +90,17 @@ const EditProfile = ({navigation}) => {
           </View>
       <View style={styles.footer}>
           {/* <RectangleButton title={'Save'} buttonColor={Colors.textHeader} recWidth={250} recBorderColor={Colors.textHeader} txtColor={Colors.white}/> */}
+ 
+        <View style={styles.container}>
+
+
+  
+  
+        </View>
+
+       
+        <RectangleButton title="Get the products" onpress={handleGetProducts} />
+            
       </View>
     </View>
   );

@@ -1,117 +1,124 @@
-import { useEffect, useState } from "react"
-import { Platform } from "react-native"
-import { requestPurchase, useIAP } from "react-native-iap"
+import { useEffect, useState } from "react";
+import { Platform } from "react-native";
+import NetInfo from "@react-native-community/netinfo";
+import { requestPurchase } from "react-native-iap";
+import * as useIAP from 'react-native-iap'
+
 import {
   STORAGE_KEYS,
   storeBooleanData,
   getBooleanData,
-} from "../helpers/asyncStorage"
+} from "../helpers/asyncStorage";
 
-
-const { IS_FULL_APP_PURCHASED } = STORAGE_KEYS
-// Play store item Ids
+const { IS_FULL_APP_PURCHASED } = STORAGE_KEYS;
 const itemSKUs = Platform.select({
   android: ["1stpayment", "2ndpayment"],
-})
-const useInAppPurchase = () => {
-  const [isFullAppPurchased, setIsFullAppPurchased] = useState(false)
-  const [connectionErrorMsg, setConnectionErrorMsg] = useState("")
+});
 
-  const {    
+const useInAppPurchase = () => {
+  const [isFullAppPurchased, setIsFullAppPurchased] = useState(false);
+  const [connectionErrorMsg, setConnectionErrorMsg] = useState("");
+
+  const {
     connected,
     products,
     getProducts,
     finishTransaction,
     currentPurchase,
-    currentPurchaseError} 
-    = useIAP()
+    currentPurchaseError
+  } = useIAP;
 
-    // Get data after initial render
-    useEffect(() => {
-      getBooleanData(IS_FULL_APP_PURCHASED).then(data => {
-        setIsFullAppPurchased(data)
-      })
-    }, [])
-   
-    // Get data from play store 
-    useEffect (()=>{
-      if(connected){
-        getProducts(itemSKUs),
-        console.log("Getting products...")
-      }
-      console.log(products)
-    },[connected,getProducts])
+  useEffect(() => {
+    getBooleanData(IS_FULL_APP_PURCHASED).then(data => {
+      setIsFullAppPurchased(data);
+    });
+  }, []);
 
-      // currentPurchase will change when the requestPurchase function is called. The purchase then needs to be checked and the purchase acknowledged so Google knows we have awared the user the in-app product.
-    useEffect (() =>{
-      const checkCurrentPurchase = async purchase => {
-        if(purchase){
-          const receipt = purchase.transactionReceipt
-          console.log("RECEIPT: ", receipt)
+  useEffect(() => {
+    if (connected) {
+      getProducts(itemSKUs).then(() => {
+        console.log("Getting products...");
+      }).catch(error => {
+        console.log("Error getting products: ", error);
+      });
+    }
+  }, [connected, getProducts]);
 
-          if (receipt){
-          // Give full app access
-            setAndStoreFullAppPurchase(true)
+  useEffect(() => {
+    const checkCurrentPurchase = async (purchase) => {
+      if (purchase) {
+        const receipt = purchase.transactionReceipt;
+        console.log("RECEIPT: ", receipt);
 
-            try {
-              const ackResult = await finishTransaction(purchase)
-              console.log("ackResult: ", ackResult)
-            } catch (ackErr) {
-              // We would need a backend to validate receipts for purhcases that pended for a while and were then declined. So I'll assume most purchase attempts go through successfully (OK ackResult) & take the hit for the ones that don't (user will still have full app access).
-              console.log("ackError: ", ackErr)
-            }
+        if (receipt) {
+          setAndStoreFullAppPurchase(true);
+
+          try {
+            const ackResult = await finishTransaction(purchase);
+            console.log("ackResult: ", ackResult);
+          } catch (ackErr) {
+            console.log("ackError: ", ackErr);
           }
         }
       }
-      checkCurrentPurchase(currentPurchase)
-    }, [currentPurchase, finishTransaction])
+    };
+    checkCurrentPurchase(currentPurchase);
+  }, [currentPurchase, finishTransaction]);
 
-      // If user reinstalls app, then they can press purchase btn (SettingsScreen) to get full app without paying again.
   useEffect(() => {
     if (currentPurchaseError) {
       if (
         currentPurchaseError.code === "E_ALREADY_OWNED" &&
         !isFullAppPurchased
       ) {
-        setAndStoreFullAppPurchase(true)
+        setAndStoreFullAppPurchase(true);
       }
     }
-  }, [currentPurchaseError])
+  }, [currentPurchaseError]);
+
+  const checkNetworkConnection = async () => {
+    const state = await NetInfo.fetch();
+    return state.isConnected;
+  };
 
   const purchaseFullApp = async () => {
-    // Reset error msg
-    if (connectionErrorMsg !== "") setConnectionErrorMsg("")
+    if (connectionErrorMsg !== "") setConnectionErrorMsg("");
+    const isConnected = await checkNetworkConnection();
+    console.log('network checking ...',isConnected)
+    if (!isConnected) {
+      setConnectionErrorMsg("Please check your internet device connection");
+      return;
+    }
+
     if (!connected) {
-      setConnectionErrorMsg("Please check your internet connection")
-    }
-    // If we are connected & have products, purchase the item. Google will handle if user has no internet here.
-    else if (products?.length > 0) {
-      requestPurchase(itemSKUs[1])
-      console.log("Purchasing products...")
-    }
-    // If we are connected but have no products returned, try to get products and purchase.
-    else {
-      console.log("No products. Now trying to get some...")
+      console.log('connection checking ...',connected)
+      setConnectionErrorMsg("Please check your internet connection to store");
+    } else if (products?.length > 0) {
+      requestPurchase(itemSKUs[1]);
+      console.log("Purchasing products...");
+    } else {
+      console.log("No products. Now trying to get some...");
       try {
-        await getProducts(itemSKUs)
-        requestPurchase(itemSKUs[1])
-        console.log("Got products, now purchasing...")
+        await getProducts(itemSKUs);
+        requestPurchase(itemSKUs[1]);
+        console.log("Got products, now purchasing...");
       } catch (error) {
-        setConnectionErrorMsg("Please check your internet connection")
-        console.log("Everything failed. Error: ", error)
+        setConnectionErrorMsg("Please check your internet connection");
+        console.log("Everything failed. Error: ", error);
       }
     }
-  }
-  const setAndStoreFullAppPurchase = boolean => {
-    setIsFullAppPurchased(boolean)
-    storeBooleanData(IS_FULL_APP_PURCHASED, boolean)
-  }  
+  };
 
+  const setAndStoreFullAppPurchase = (boolean) => {
+    setIsFullAppPurchased(boolean);
+    storeBooleanData(IS_FULL_APP_PURCHASED, boolean);
+  };
 
   return {
     isFullAppPurchased,
     connectionErrorMsg,
     purchaseFullApp,
-  }
-}
-export default useInAppPurchase
+  };
+};
+
+export default useInAppPurchase;

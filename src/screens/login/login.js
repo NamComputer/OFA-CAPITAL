@@ -101,7 +101,8 @@ export function Login ({navigation}) {
       <View style={styles.footer}>
         <RectangleButton
             // title={'Login'}
-              onpress={async () => {loading(true),checkUser()}}
+              // onpress={async () => {loading(true),checkUser()}}
+              onpress={() => {navigation.navigate("Main")}}
             buttonColor={Colors.button}
             title={login ? 'Logging...' : 'Login'}
             recWidth={300}

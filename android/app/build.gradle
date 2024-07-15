@@ -225,6 +225,9 @@ android {
         }
     }
     buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
@@ -235,6 +238,14 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+
+    // flavorDimensions "appstore"
+    // productFlavors {
+    //     googlePlay {
+    //         dimension "appstore"
+    //         missingDimensionStrategy "store", "play"
+    //     }
+    // }
 
     // applicationVariants are e.g. debug, release
     applicationVariants.all { variant ->
@@ -255,7 +266,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-
+    
+    implementation project(':react-native-iap')
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
