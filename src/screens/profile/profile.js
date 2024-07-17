@@ -26,7 +26,7 @@ export default function Profile({navigation}) {
       }
     };
 
-    fetchUser();
+    //fetchUser();
 
   },[])
   return (
@@ -119,5 +119,6 @@ const styles = StyleSheet.create({
   },
   imageIcon:{
     marginBottom:200,
-  }
+  },
+
 });
