@@ -1,57 +1,55 @@
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
-import { Colors } from '../theme/color';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
+import {Colors} from '../theme/color';
 import {widthPercentageToDP as scaleWidth} from 'react-native-responsive-screen';
 
-import React, { useState } from 'react';
-import { RectangleButton } from '../components/RectangleButton';
-import  Register  from '../register/register';
+import React, {useState} from 'react';
+import {RectangleButton} from '../components/RectangleButton';
+import Register from '../register/register';
 
 import {getUser, posUserLogin} from '../hooks';
-import { storeData } from '../helpers/asyncStorage';
+import {storeData} from '../helpers/asyncStorage';
 
-
-
-
-export function Login ({navigation}) {
-
+export function Login({navigation}) {
   const checkUser = async () => {
     const login = await posUserLogin({
       identity: user,
-      password: password
-      
+      password: password,
     });
-    if (login.error != null && login.error.status == 401)
-      {
-        Alert.alert('Invalid username or password!')
-        loading(false)
-      }
-    if (login.data != null)
-      {
-        storeData('login',login.data)
-        navigation.navigate('Main')
-        loading(false)
-      }
-      else{
-        Alert.alert('please check again!')
-        loading(false)
-      }
-    console.log('Login result', login)
-  }
+    if (login.error != null && login.error.status == 401) {
+      Alert.alert('Invalid username or password!');
+      loading(false);
+    }
+    if (login.data != null) {
+      storeData('login', login.data);
+      navigation.navigate('Main');
+      loading(false);
+    } else {
+      Alert.alert('please check again!');
+      loading(false);
+    }
+    console.log('Login result', login);
+  };
 
   const [isChecked, setChecked] = useState(false);
   const [login, loading] = useState(false);
   const [user, setUser] = useState();
-  const [password, setPassword] = useState('')
+  const [password, setPassword] = useState('');
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => Alert.alert('You pressed')}>
+        <TouchableOpacity onPress={() => Alert.alert('You pressed')}>
           <Text style={styles.hyperLink}>Login</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Register')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
           <Text style={styles.notHyperLink}>Register</Text>
         </TouchableOpacity>
       </View>
@@ -66,7 +64,7 @@ export function Login ({navigation}) {
             autoCapitalize="none"
             onChangeText={user => setUser(user)}
             value={user}
-            />
+          />
         </View>
         <View style={styles.subBody}>
           <Image source={require('../../assets/images/lock.png')} />
@@ -80,7 +78,7 @@ export function Login ({navigation}) {
             value={password}
             secureTextEntry={true}
             password={true}
-            />
+          />
         </View>
         <View style={styles.passWordSection}>
           <View style={styles.chkboxNvalue}>
@@ -92,23 +90,26 @@ export function Login ({navigation}) {
             />
             <Text style={styles.textOfCheckbox}>Remember Me</Text>
           </View>
-            <TouchableOpacity
-              onPress={() => {Alert.alert('You Pressed'), console.log('pressed')}}>
-              <Text style={styles.secondTextofCheckbox}>Forgot Password</Text>
-            </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              Alert.alert('You Pressed'), console.log('pressed');
+            }}>
+            <Text style={styles.secondTextofCheckbox}>Forgot Password</Text>
+          </TouchableOpacity>
         </View>
       </View>
       <View style={styles.footer}>
         <RectangleButton
-            // title={'Login'}
-              // onpress={async () => {loading(true),checkUser()}}
-              onpress={() => {navigation.navigate("Main")}}
-            buttonColor={Colors.button}
-            title={login ? 'Logging...' : 'Login'}
-            recWidth={300}
-            recBorderColor={Colors.button}
-
-          />
+          // title={'Login'}
+          // onpress={async () => {loading(true),checkUser()}}
+          onpress={() => {
+            navigation.navigate('Main');
+          }}
+          buttonColor={Colors.button}
+          title={login ? 'Logging...' : 'Login'}
+          recWidth={300}
+          recBorderColor={Colors.button}
+        />
       </View>
     </View>
   );
@@ -122,27 +123,27 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   header: {
-    flex: .2,
-    flexDirection:'row',
+    flex: 0.2,
+    flexDirection: 'row',
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'space-evenly',
   },
   body: {
-    flex:.5,
-    justifyContent:'center',
-    flexDirection:'column',
+    flex: 0.5,
+    justifyContent: 'center',
+    flexDirection: 'column',
     alignContent: 'center',
     alignItems: 'center',
   },
-  subBody:{
-    justifyContent:'center',
-    flexDirection:'row',
+  subBody: {
+    justifyContent: 'center',
+    flexDirection: 'row',
     alignContent: 'center',
     alignItems: 'center',
-    marginRight:10,
+    marginRight: 10,
   },
-  passWordSection:{
+  passWordSection: {
     flexDirection: 'row',
     alignContent: 'center',
     alignItems: 'center',
@@ -151,7 +152,7 @@ const styles = StyleSheet.create({
     marginLeft: scaleWidth(11),
   },
   footer: {
-    flex:.5,
+    flex: 0.5,
     alignContent: 'center',
     alignItems: 'center',
   },
@@ -165,6 +166,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.hint,
     alignSelf: 'center',
     fontSize: 20,
+    color: Colors.dark,
   },
   chkboxNvalue: {
     flexDirection: 'row',
@@ -173,14 +175,14 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     right: 35,
   },
-  textOfCheckbox:{
-    margin:10,
-    color:Colors.textOfCheckbox,
-    fontWeight:'bold'
+  textOfCheckbox: {
+    margin: 10,
+    color: Colors.textOfCheckbox,
+    fontWeight: 'bold',
   },
-  secondTextofCheckbox:{
-    color:Colors.secondTextOfCheckbox,
-    fontWeight:'bold'
+  secondTextofCheckbox: {
+    color: Colors.secondTextOfCheckbox,
+    fontWeight: 'bold',
   },
   hyperLink: {
     color: Colors.button,
