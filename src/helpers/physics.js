@@ -17,6 +17,7 @@ const Physics = (entities, { touches, time, dispatch }) => {
             })
         })
 
+
     Matter.Engine.update(engine, time.delta)
 
     for (let index = 1; index <= 2; index++) {

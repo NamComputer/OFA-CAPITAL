@@ -64,7 +64,7 @@ export default function UploadHistory() {
  
         <View style={styles.container}>
           <Text style={styles.text}>Feature Coming Soon!</Text>
-          <Text style={styles.subText}>Stay tuned for updates.</Text>
+          <Text style={styles.subTitle}>Stay tuned for updates.</Text>
             
         </View>
       
@@ -123,6 +123,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     justifyContent:"space-between",
     flexDirection:'row',
+
   },
   title: {
     color:Colors.dark,

@@ -2,25 +2,76 @@ import { StyleSheet, Text, View, Image, Alert, TouchableOpacity,ScrollView } fro
 import { Colors } from '../theme/color';
 import { USER } from '../data/users';
 import { RectangleButton } from '../components/RectangleButton';
-import { TRANSACTIONS } from '../data/transactions';
-import Transactions from '../components/TransactionsList';
 
+import Transactions from '../components/TransactionsList';
+import { useCallback, useEffect, useState } from 'react';
+import { getBalance, getTotalBalance } from '../hooks';
+import { getData, storeData } from '../helpers/asyncStorage';
+import { loadBalance } from '../helpers/loadBalance';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function Wallet() {
+  const [tempBalance, settempBalance] = useState(0)
+  const [balance, setBalance] = useState(0)
+  const [userTrans,setUserTrans] = useState({"data":[]})
+  const [nameUser,setUser] = useState('')
+    useFocusEffect(
+      useCallback(() => {
+        const fetchBalance = async () => {
+          try {
+
+            const userBalance = await getBalance(await(getData('loginToken')));
+            const getlBalance = await getTotalBalance(await(getData('loginToken')))
+            console.log('Data api/assets',getlBalance.data)
+            const user = await getData('nameUser')
+            setUser(user)
+            if (userBalance.data !== null  ) {
+              
+              //setAuthProfile(userInfo.data);
+              //storeData('', login.data);
+              setUserTrans(userBalance)
+              settempBalance(getlBalance.data.tempTotal)
+              setBalance(getlBalance.data.actualTotal)
+              //console.log('Data api/transaction',userBalance.data[1],'result',temp)
+            }
+          } catch (e) {
+            console.error('Error fetching balance:', e);
+          }
+        };
+        console.log('Home Screen is focused');
+            //loadBalance()
+            fetchBalance()
+        return () => {
+          setUserTrans({"data":[]})
+          setBalance(0)
+          console.log('Home Screen is unfocused');
+          // Cleanup actions if necessary
+        };
+      }, [])
+    )
+
+
+
+  
+  
+
   return (
     <View style = {styles.container}>
       <View style={styles.header}>
         <View style={styles.leftPart}>
           <Text style={styles.textHeader}>Dashboard</Text>
-          <Text style={styles.userName}>Hi, {USER[0].user}!</Text>  
+          <Text style={styles.userName}>Hi, {nameUser}!</Text>  
           <Text style={styles.balance}>Total Balance</Text>
-          <Text style={styles.balanceValue}>$124.57</Text>
+          <Text style={styles.balanceValue}>{balance}$</Text>
+          <Text style={styles.balance}>Temp Balance</Text>
+          <Text style={styles.tempbalanceValue}>{tempBalance}$</Text>
         </View>
         <View style={styles.rightPart}>
           <Image style={styles.imageProfile} source={{uri:USER[0].image}} /> 
           <TouchableOpacity onPress={()=>Alert.alert('You pressed notification')}>
             <Image source={require('../../assets/images/notifications.png')}/>
           </TouchableOpacity>
+          
         </View>
       </View>
       <View style={styles.body}> 
@@ -28,15 +79,15 @@ export default function Wallet() {
         <RectangleButton title={'🔽 Withdraw'} onpress={() => Alert.alert('Withdraw')} buttonColor={Colors.bannerBackGround} txtColor={Colors.white} recWidth={160} recBorderColor={Colors.bannerBackGround}/>
       </View>
       <View style={styles.footer}>
-        {TRANSACTIONS.length < 1 ? 
+        {userTrans.data.length < 1? 
         <View style={styles.containerNoTransactions}>
           <Image source={require('../../assets/images/empty_illustration.png')}/>
           <Text style={styles.noTransactions}>There's no transactions till now! </Text>
         </View>  
           :
         <ScrollView>
-          {TRANSACTIONS.map((transactions,index)=>(
-              <Transactions transactions={transactions} key={index}/>
+          {userTrans.data.map((transactions)=>(
+              <Transactions transactions={transactions} key={userTrans.data._id}/>
           ))}
         </ScrollView>}
       </View>
@@ -93,7 +144,7 @@ const styles = StyleSheet.create({
     marginTop:40
   },
   rightPart:{
-    marginTop:40,
+    marginTop:60,
     flexDirection:'column',
     alignContent: 'center',
     alignItems: 'center',
@@ -111,7 +162,12 @@ const styles = StyleSheet.create({
   },
   balanceValue:{
     color:Colors.white,
-    fontSize: 40,
+    fontSize: 20,
+    fontWeight:'600' 
+  },
+  tempbalanceValue:{
+    color:Colors.red,
+    fontSize: 20,
     fontWeight:'600' 
   },
   noTransactions:{

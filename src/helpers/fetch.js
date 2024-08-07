@@ -44,3 +44,23 @@ export const apiQROrderPOST = async (path, body, willDisplayErr = true) => {
   return (await res.json());
 
 };
+
+export const apiBalanceGET = async (path, body) => {
+
+  
+  const urlFetch = 'https://dev.ofa-capital.com' + path;
+  // SHOW_LOG && console.log('POST ', urlFetch);
+  const res = await fetch(urlFetch, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(
+      body
+    ),
+  });
+
+
+  return (await res.json());
+  }

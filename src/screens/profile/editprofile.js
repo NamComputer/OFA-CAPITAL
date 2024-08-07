@@ -18,13 +18,15 @@ import {
   finishTransaction, //For acknowledging a purchase
   getAvailablePurchases,
 } from 'react-native-iap';
+import { posPurchase } from '../hooks';
+import { getData } from '../helpers/asyncStorage';
 
 const EditProfile = ({navigation}) => {
   const [products, setProducts] = useState([]);
   const [isLoading, setLoading] = useState(true);
-  const [success, setSuccess] = useState(false);
+ 
   const itemSKUs = Platform.select({
-    android: ['1stpayment', '2ndpayment', '200usdofa', '4thproduct'],
+    android: ['20','01','10'],
     ios: ['1stpayment_ios', '2ndpayment_ios'],
   });
 
@@ -33,7 +35,7 @@ const EditProfile = ({navigation}) => {
     try {
       await requestPurchase({skus: [productId]});
     } catch (error) {
-      console.lof('error', error);
+      console.log('error', error);
       Alert.alert('Error occurred while making purchase');
     } finally {
       setLoading(false);
@@ -43,28 +45,44 @@ const EditProfile = ({navigation}) => {
   useEffect(() => {
     const purchaseUpdateSubscription = purchaseUpdatedListener(
       async purchase => {
-        const receipt = purchase.transactionReceipt;
-
-        if (receipt) {
+        console.log('purchase',purchase )
+        const receipt = JSON.parse(purchase.transactionReceipt);
+        console.log('receipt',receipt )
+        if (receipt ) {
           try {
             const result = await finishTransaction({
               purchase,
-              isConsumable: false,
+              isConsumable: true,
+            })
+
+            let id =  await(getData('idUser'))
+            const apiTransPOS = await posPurchase({
+              "amount": receipt.productId*receipt.quantity,
+              "currency": "usd",
+              "type": "in-app-purchase",
+              "typeId": "2",
+              "user": id,
+              "detail": receipt.orderId
             });
-            console.log(result, receipt);
+            console.log('result',result, 'receipt',receipt,'API Result',apiTransPOS);
+          
+          
+          
           } catch (error) {
             console.error(
               'An error occurred while completing transaction',
               error,
             );
           }
+          
           notifySuccessfulPurchase();
+
         }
       },
     );
 
     const purchaseErrorSubscription = purchaseErrorListener(error =>
-      console.error('Purchase error', error.message),
+      console.error('Purchase error:', error.message),
     );
 
     const fetchProducts = async () => {
@@ -74,12 +92,13 @@ const EditProfile = ({navigation}) => {
           item => item.productId,
         );
 
-        console.log(investmentProducts);
+        //console.log('investment Products',investmentProducts);
 
         const result = (await getProducts({skus: itemSKUs})).map(item => ({
           ...item,
           purchased: investmentProductIds.indexOf(item.productId) !== -1,
         }));
+        console.log('----present product------',result)
         setProducts(result);
         setLoading(false);
       } catch (error) {
@@ -96,14 +115,10 @@ const EditProfile = ({navigation}) => {
   }, []);
 
   const notifySuccessfulPurchase = () => {
-    Alert.alert('Success', 'Purchase successful', [
-      {
-        text: 'Home',
-        onPress: () => navigation.navigate('Home'),
-      },
-    ]);
+    Alert.alert('Success', 'Purchase successful');
   };
 
+ 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -123,17 +138,17 @@ const EditProfile = ({navigation}) => {
         {!isLoading ? (
           <>
             {/* <View >
-                     
-                        <View style={styles.heading}>
-                            <Text style={styles.text}>Unlock all Recipes</Text>
-                            <Text style={styles.subText}>Get unlimited access to 1000+ recipes</Text>
-                        </View>
-                    </View> */}
+              <View style={styles.heading}>
+                  <Text style={styles.text}>Unlock all Recipes</Text>
+                  <Text style={styles.subText}>Get unlimited access to 1000+ recipes</Text>
+              </View>
+          </View> */}
+           
             {products.map((product, index) => (
               <ProductItem
                 key={index}
                 title={product.title}
-                purchased={product.purchased}
+                //purchased={product.purchased}
                 onPress={() => handlePurchase(product.productId)}
               />
             ))}

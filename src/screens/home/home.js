@@ -1,35 +1,134 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState, useEffect } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Alert, Text, TouchableOpacity, View } from 'react-native';
 import { GameEngine } from 'react-native-game-engine';
 import entities from '../entities';
 import Physics from '../../helpers/physics';
+import { getData } from '../helpers/asyncStorage';
+import { getProfile, getTotalBalance } from '../hooks';
+import {storeData} from '../helpers/asyncStorage';
+import { loadBalance } from '../helpers/loadBalance';
+import { useFocusEffect } from '@react-navigation/native';
+import { Colors } from '../theme/color';
 
 export default function Home ({navigation})  {
 
   const [running, setRunning] = useState(false)
   const [gameEngine, setGameEngine] = useState(null)
   const [currentPoints, setCurrentPoints] = useState(0)
+  const [type, setType] = useState()
+
+//   useFocusEffect(
+//   useCallback(async() => {
+//     const getlBalance = await getTotalBalance(await(getData('loginToken')))
+//     console.log('load balance at home screen',getlBalance.data)
+    
+//     // return(
+//     //   setRunning(false),
+//     //   gameEngine.stop()
+//     // )
+//   }, [])
+ 
+
+// )
+
   useEffect(() => {
     setRunning(false)
-  }, [])
+    const fetchUser = async () => {
+      try {
+  
+        const userInfo = await getProfile(await(getData('loginToken')));
+    
+        if (userInfo.data !== null) {
+          //setAuthProfile(userInfo.data);
+          storeData('idUser', userInfo.data.user._id);
+          storeData('nameUser',userInfo.data.user.username)
+          console.log('Data api/auth/profile',userInfo.data.user._id)
+        }
+      } catch (e) {
+        console.error('Error fetching user info:', e);
+      }
+    };
+    fetchUser()
+  },[])
+  
+  const checkCondition = async(params) =>{
+    //loadBalance()
+    //let tempBalance =  await(getData('tempBalance'))
+    let balance = await getTotalBalance(await(getData('loginToken')))
+
+    console.log('compare',balance.data.actualTotal != balance.data.tempTotal)
+    if( balance.data.tempTotal  == 0){
+
+
+      if(params == 'easy' & JSON.parse(balance.data.actualTotal) >=10){
+        setCurrentPoints(0)
+        setRunning(true)
+        gameEngine.swap(entities())
+        setType(params)
+
+      }
+      
+      else if(params == 'medium' & JSON.parse(balance.data.actualTotal) >100){
+        setCurrentPoints(0)
+        setRunning(true)
+        gameEngine.swap(entities())
+        setType(params)
+      }
+      
+      else if(params == 'hard'& JSON.parse(balance.data.actualTotal) >1000){
+        setCurrentPoints(0)
+        setRunning(true)
+        gameEngine.swap(entities())
+        setType(params)
+      }
+      else{
+        Alert.alert('Notify','Not enough balance', [
+          {
+            text: 'TOP-UP now!',
+            onPress: () => navigation.navigate('EditProfile'),
+          },
+        ])
+      }
+  }
+    else{
+      Alert.alert('Notify','Your temp & total balance may not verify, Contact Admin! ')
+    }
+}
+
+
+
   return (
     <View style={{ flex: 1 }}>
-      <Text style={{ textAlign: 'center', fontSize: 40, fontWeight: 'bold', margin: 20 }}>{currentPoints}</Text>
+      <Text style={{ textAlign: 'center', fontSize: 40, fontWeight: 'bold', margin: 20 ,color:Colors.dark}}>{currentPoints}</Text>
       <GameEngine
         ref={(ref) => { setGameEngine(ref) }}
         systems={[Physics]}
         entities={entities()}
         running={running}
         onEvent={(e) => {
+          //console.log('Event received:', e.type);
+        
           switch (e.type) {
-            case 'game_over':
-              setRunning(false)
-              gameEngine.stop()
+            case 'game_over':        
+              //console.log('Game Over event triggered');
+              setRunning(false);
+              gameEngine.stop();
+        
+              navigation.navigate('Winner',{
+                currentPoints,
+                type
+              })
+       
               break;
             case 'new_point':
-              setCurrentPoints(currentPoints + 1)
+              //console.log('New Point event triggered');
+              //setHasCheckedResult(true)
+              setCurrentPoints(currentPoints + 1);
               break;
+            
+            // default:
+              //console.log('Unknown event type:', e.type);
           }
         }}
         style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
@@ -39,18 +138,36 @@ export default function Home ({navigation})  {
       </GameEngine>
 
       {!running ?
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center',backgroundColor:'gray' }}>
           <TouchableOpacity style={{ backgroundColor: 'black', paddingHorizontal: 30, paddingVertical: 10 }}
             onPress={() => {
-              setCurrentPoints(0)
-              setRunning(true)
-              gameEngine.swap(entities())
+              
+              checkCondition('easy')
             }}>
+          
             <Text style={{ fontWeight: 'bold', color: 'white', fontSize: 30 }}>
-              START GAME
+              EASY (min 10$)
             </Text>
           </TouchableOpacity>
-
+          <TouchableOpacity style={{ backgroundColor: 'black', paddingHorizontal: 30, paddingVertical: 10 }}
+            onPress={() => {
+              checkCondition('medium')
+            }}>
+         
+            <Text style={{ fontWeight: 'bold', color: 'white', fontSize: 30 }}>
+              MEDIUM (min 100$)
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={{ backgroundColor: 'black', paddingHorizontal: 30, paddingVertical: 10 }}
+            onPress={() => {
+              
+              checkCondition('hard')
+            }}>
+           
+            <Text style={{ fontWeight: 'bold', color: 'white', fontSize: 30 }}>
+              HARD (min 1000$)
+            </Text>
+          </TouchableOpacity>
         </View> : null}
     </View>
   );

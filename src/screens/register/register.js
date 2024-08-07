@@ -57,7 +57,7 @@ const Register = ({ navigation }) => {
     });
     if ((reg.data).length != 0)
       {
-        storeData('name')
+        //storeData('name')
         navigation.navigate('Login')
       }
       else{
@@ -83,18 +83,6 @@ const Register = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       <View style={styles.body}>
-        {/* <View style={styles.subBody}>
-          <Image source={require('../../assets/images/Name.png')} />
-    
-            <TextInput
-              maxLength={30}
-              style={styles.input}
-              placeholder={'Your Name'}
-              placeholderTextColor={Colors.hint}
-              autoCapitalize="none"
-            />
-   
-        </View> */}
         <View style={styles.subBody}>
           <Image source={require('../../assets/images/mail.png')} />
 
@@ -219,6 +207,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.hint,
     alignSelf: 'center',
     fontSize: 20,
+    color:Colors.dark
   },
   chkboxNvalue: {
     flexDirection: 'row',

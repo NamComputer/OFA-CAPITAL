@@ -36,6 +36,7 @@ export const getData = async key => {
     const value = await AsyncStorage.getItem(key);
       if (value !== null) {
         return value; // Parse JSON string back to object
+
       }
       return null;
     } catch (e) {

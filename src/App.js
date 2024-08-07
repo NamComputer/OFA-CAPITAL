@@ -1,5 +1,5 @@
-import { Image, AppRegistry,StyleSheet } from 'react-native';
-import React from 'react';
+import { Image, AppRegistry,StyleSheet, View, ActivityIndicator } from 'react-native';
+import React, { useContext } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -19,6 +19,10 @@ import SelectPhotoScreen from './screens/takephotos/takephotos';
 import NewPostScreen from './screens/upload/newpost';
 import TakeMultiPhotos from './screens/takephotos/takemultiplephotos';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { UserContext,UserProvider } from './screens/GlobalLoading/userContext';
+import WinnerNotification from './screens/notify/winner';
+import MySubscription from './screens/profile/mySubscritpion';
 
 
 const Tab = createMaterialBottomTabNavigator();
@@ -46,6 +50,18 @@ const BottomStackScreen = () => (
 
 const Stack = createNativeStackNavigator();
 const Main = () => {
+
+  // const { balance, loading } = useContext(UserContext);
+
+  // if (loading) {
+  //   return (
+  //     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+  //       <ActivityIndicator size="large" />
+  //     </View>
+  //   );
+  // }
+
+
   return (
   <NavigationContainer>
     <Stack.Navigator 
@@ -61,6 +77,8 @@ const Main = () => {
       <Stack.Screen name="SelectPhotos" component={SelectPhotoScreen} options={{ headerShown: false }} />
       <Stack.Screen name="NewPost" component={NewPostScreen} options={{ headerShown: false }} />
       <Stack.Screen name="TakeMultiPhotos" component={TakeMultiPhotos} options={{ headerShown: false }} />
+      <Stack.Screen name="Winner" component={WinnerNotification} options={{ headerShown: false }} />
+      <Stack.Screen name="mySubscription" component={MySubscription}  options={{ headerShown: false }} />
     </Stack.Navigator>
   </NavigationContainer>
 )};
@@ -70,7 +88,9 @@ const Main = () => {
 export default function App () {
   return (
   <SafeAreaView style={styles.container}>
+
       <Main />
+
   </SafeAreaView>
   )
 }

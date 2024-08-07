@@ -10,15 +10,25 @@ import {
 import {Colors} from '../theme/color';
 import {widthPercentageToDP as scaleWidth} from 'react-native-responsive-screen';
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {RectangleButton} from '../components/RectangleButton';
-import Register from '../register/register';
 
-import {getUser, posUserLogin} from '../hooks';
+
+import {posUserLogin} from '../hooks';
 import {storeData} from '../helpers/asyncStorage';
 
 export function Login({navigation}) {
+
+
+  const [isChecked, setChecked] = useState(false);
+  const [login, loading] = useState(false);
+  const [user, setUser] = useState();
+  const [password, setPassword] = useState('');
+
+
   const checkUser = async () => {
+    
+
     const login = await posUserLogin({
       identity: user,
       password: password,
@@ -28,7 +38,8 @@ export function Login({navigation}) {
       loading(false);
     }
     if (login.data != null) {
-      storeData('login', login.data);
+      storeData('loginToken', login.data);
+      
       navigation.navigate('Main');
       loading(false);
     } else {
@@ -38,10 +49,7 @@ export function Login({navigation}) {
     console.log('Login result', login);
   };
 
-  const [isChecked, setChecked] = useState(false);
-  const [login, loading] = useState(false);
-  const [user, setUser] = useState();
-  const [password, setPassword] = useState('');
+  
 
   return (
     <View style={styles.container}>
@@ -100,11 +108,10 @@ export function Login({navigation}) {
       </View>
       <View style={styles.footer}>
         <RectangleButton
-          // title={'Login'}
-          // onpress={async () => {loading(true),checkUser()}}
-          onpress={() => {
-            navigation.navigate('Main');
-          }}
+          onpress={async () => {loading(true),checkUser()}}
+          // onpress={() => {
+          //   navigation.navigate('Main');
+          // }}
           buttonColor={Colors.button}
           title={login ? 'Logging...' : 'Login'}
           recWidth={300}
