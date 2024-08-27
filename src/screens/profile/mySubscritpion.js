@@ -5,6 +5,7 @@ import {
     Image,
     TouchableOpacity,
     Alert,
+    ScrollView,
   } from 'react-native';
   import {Colors} from '../theme/color';
   import React, {useEffect, useState} from 'react';
@@ -26,7 +27,7 @@ import {
 
 
     const subItemSKUs = Platform.select({
-      android: ['05'],
+      android: ['02','11','21','101','501'],
   
     });
   
@@ -150,8 +151,8 @@ import {
         <View style={styles.body}>
 
             {!isLoading ? (
-                <>
-          
+                <ScrollView>
+                
                 {availableItems.map((product, index) => (
                     <ProductItem
                     key={index}
@@ -160,7 +161,7 @@ import {
                     onPress={() => handleSubscription(product)}
                     />
                 ))}
-                </>
+                </ScrollView>
             ) : (
                 <></>
             )}
@@ -187,15 +188,14 @@ import {
       height: '100%',
     },
     body: {
-      flex: 0.9,
-      justifyContent: 'center',
-      flexDirection: 'column',
+      flex: 0.8,
+      justifyContent:'center',
+      flexDirection:'column',
       alignContent: 'center',
       alignItems: 'center',
-
     },
     footer: {
-      flex: 0.5,
+      flex: 0.1,
   
       alignContent: 'center',
       alignItems: 'center',
@@ -208,7 +208,7 @@ import {
       fontSize: 32,
       color: Colors.textHeader,
       fontWeight: '700',
-      marginRight: 120,
+      marginRight: 100,
     },
   
     text: {
