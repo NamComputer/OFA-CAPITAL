@@ -61,9 +61,9 @@ export default function Wallet() {
         <View style={styles.leftPart}>
           <Text style={styles.textHeader}>Dashboard</Text>
           <Text style={styles.userName}>Hi, {nameUser}!</Text>  
-          <Text style={styles.balance}>Total Balance</Text>
+          <Text style={styles.balance}>Total Balance:</Text>
           <Text style={styles.balanceValue}>{balance}$</Text>
-          <Text style={styles.balance}>Temp Balance</Text>
+          <Text style={styles.balance}>Temp Balance:</Text>
           <Text style={styles.tempbalanceValue}>{tempBalance}$</Text>
         </View>
         <View style={styles.rightPart}>
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   header: {
-    flex: .5,
+    flex: .7,
     flexDirection:'row',
     alignContent: 'center',
     alignItems: 'center',

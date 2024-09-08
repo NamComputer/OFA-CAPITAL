@@ -1,26 +1,28 @@
+import React,{useCallback} from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View,TouchableWithoutFeedback, Keyboard, FlatList } from 'react-native';
+import { StyleSheet, Text, View,TouchableWithoutFeedback, Keyboard, FlatList,Linking, Button, Alert, Image } from 'react-native';
 import { Colors } from '../../theme/color';
 import { format } from 'date-fns';
+import { RectangleButton } from '../components/RectangleButton';
 
-const DATA = [
-  {
-    status: "Succeeded",
-    timeStamp : "March 28, 2022",
-    id:1
+// const DATA = [
+//   {
+//     status: "Succeeded",
+//     timeStamp : "March 28, 2022",
+//     id:1
     
-  },
-  {
-    status: "Failed",
-    timeStamp : "March 28, 2022",
-    id:2
-  },
-  {
-    status: "Succeeded",
-    timeStamp : "March 28, 2025",
-    id:3
-  },
-];
+//   },
+//   {
+//     status: "Failed",
+//     timeStamp : "March 28, 2022",
+//     id:2
+//   },
+//   {
+//     status: "Succeeded",
+//     timeStamp : "March 28, 2025",
+//     id:3
+//   },
+// ];
 //Old history screen
 // export default function UploadHistory() {
 //   return (
@@ -59,13 +61,33 @@ const DATA = [
 //   );
 // }
 
+const OpenURLButton = ({url, children}) => {
+  const handlePress = useCallback(async () => {
+    // Checking if the link is supported for links with custom URL scheme.
+    const supported = await Linking.canOpenURL(url);
+    console.log('supported',supported)
+    if (!supported) {
+      // Opening the link with some app, if the URL scheme is "http" the web link should be opened
+      // by some browser in the mobile
+      await Linking.openURL(url);
+    } else {
+      Alert.alert(`Don't know how to open this URL: ${url}`);
+    }
+  }, [url]);
+
+   
+  //<Button color={'#FFDD00'}  title={children} onPress={handlePress} />;
+  return <RectangleButton title={children} onpress={handlePress} buttonColor={'#FFDD00'} txtColor={Colors.dark} recBorderColor={'#FFDD00'} recWidth={300}/>
+};
+
 export default function UploadHistory() {
   return (
  
         <View style={styles.container}>
-          <Text style={styles.text}>Feature Coming Soon!</Text>
-          <Text style={styles.subTitle}>Stay tuned for updates.</Text>
-            
+        
+       
+ 
+          <OpenURLButton url={'https://buymeacoffee.com/ofacapitalinc'}>❤️　Click here to support</OpenURLButton>
         </View>
       
   );
@@ -77,66 +99,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  headerTitle: {
-    fontSize: 40,
-    fontWeight: "700",
-    color: Colors.dark,
-    justifyContent: "center",
-    flexDirection: "column",
-    textAlign: "center"
-  },
-  subTitle: {
-    fontSize: 15,
-    color: Colors.dark,
-    justifyContent: "center",
-    flexDirection: "column",
-    textAlign: "center"
-  },
-  btn: {
-    marginTop: 100,
-    justifyContent: "center",
-    alignSelf: "center",
-  },
-  header: {
-    flexDirection: "row",
-    alignItems:'center'
-  },
-  button: {
-    alignSelf: "center",
-    alignItems:'center',
-    justifyContent:'center',
-    backgroundColor: "white",
-    padding: 10,
-    margin:280,
-    width:"80%",
-    height:"5%",
-    borderRadius:10
-  },
-  text:{
-    color: Colors.dark,
-  },
-  item: {
-    borderBottomWidth:5,
-    borderColor: "#24cbc2",
-    padding: 10,
-    marginVertical: 8,
-    marginHorizontal: 20,
-    justifyContent:"space-between",
-    flexDirection:'row',
 
-  },
-  title: {
-    color:Colors.dark,
-    fontSize: 15,
-    margin:10
-  },
-  noHistory:{
-    flex:1,
-    fontSize: 40,
-    fontWeight: "700",
-    color: Colors.textHeader,
+
+  supportButton: {
+
     justifyContent: "center",
-    flexDirection: "column",
-    textAlign: "center",
-  }
+    alignSelf: "center",
+    borderRadius:100,
+    color:'yellow'
+  },
+
+
+
 });

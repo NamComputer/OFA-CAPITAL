@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     flexDirection:'column',
     alignContent: 'center',
     alignItems: 'center',
-    marginTop:20
+
   },
   footer: {
     flex:.2,
