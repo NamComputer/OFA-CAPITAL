@@ -78,18 +78,18 @@ const styles = StyleSheet.create({
     flexDirection:'column',
     alignContent: 'center',
     alignItems: 'center',
-
+  
   },
   footer: {
     flex:.2,
-    marginTop:100,
+    marginTop:30,
     alignContent: 'center',
     alignItems: 'center',
   },
   imageProfile:{
     borderRadius:50,
-    width: 140, 
-    height: 140,
+    width: 100, 
+    height: 100,
   },
   headerChild:{
     flexDirection:'column',
