@@ -10,25 +10,28 @@ import {
 import {Colors} from '../theme/color';
 import {widthPercentageToDP as scaleWidth} from 'react-native-responsive-screen';
 
+
 import React, {useEffect, useState} from 'react';
 import {RectangleButton} from '../components/RectangleButton';
 
-
+import { devURL,productionURL } from '../helpers/fetch';
 import {posUserLogin} from '../hooks';
-import {storeData} from '../helpers/asyncStorage';
+import {getData, storeData} from '../helpers/asyncStorage';
 
 export function Login({navigation}) {
 
-
+  if( getData('appMode')==null){
+    storeData('appMode',productionURL)
+  }
   const [isChecked, setChecked] = useState(false);
   const [login, loading] = useState(false);
   const [user, setUser] = useState();
   const [password, setPassword] = useState('');
-
+  
 
   const checkUser = async () => {
     
-
+    try {
     const login = await posUserLogin({
       identity: user,
       password: password,
@@ -46,8 +49,48 @@ export function Login({navigation}) {
       Alert.alert('please check again!');
       loading(false);
     }
-    console.log('Login result', login);
+  }
+  catch (e) {
+    Alert.alert('please check again!',e.message);
+    loading(false);
+    console.error('Error fetching balance:', e);
+  }
+    
   };
+
+  const changeURL = async() => {
+    Alert.alert('Changing the server!', 'Yours current url is '+ await getData('appMode')+' Do you want to change to',[
+      
+      {
+        text: 'Confirm',
+        onPress: async() => {
+          if(await getData('appMode')==productionURL){
+     
+            storeData('appMode',devURL)
+          }
+          else{
+            storeData('appMode',productionURL)
+          }       
+        },
+        
+      },
+      {
+        text: 'Cancel',   
+
+      },
+    
+    ],
+      {
+        cancelable: true,
+        onDismiss: () =>
+          Alert.alert(
+            'This change was dismissed.',
+          ),
+      },
+    
+    )
+ 
+  }
 
   
 
@@ -117,6 +160,9 @@ export function Login({navigation}) {
           recWidth={300}
           recBorderColor={Colors.button}
         />
+        <TouchableOpacity onLongPress={changeURL}>
+          <Text style={styles.hyperLink}>Powered by OFA</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -162,6 +208,9 @@ const styles = StyleSheet.create({
     flex: 0.5,
     alignContent: 'center',
     alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+
   },
   input: {
     height: 50,

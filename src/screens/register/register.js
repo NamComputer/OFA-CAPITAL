@@ -49,26 +49,30 @@ const Register = ({ navigation }) => {
 
   const handleSubmit = async () => {
 
-    if(password == confirmPassword){
-    const reg = await posUserRegiser({
-      username: email,
-      password: password,
-       
-    });
-    if ((reg.data).length != 0)
-      {
-        //storeData('name')
-        navigation.navigate('Login')
-      }
-      else{
-        console.log(String(reg.error.status))
-        Alert.alert(String(reg.error.status),reg.error.detail)
-      }
-  }
-    else{
-      Alert.alert('Something wrong, please contact admin')
+    try{
+      if(password == confirmPassword){
+      const reg = await posUserRegiser({
+        username: email,
+        password: password,
+        
+      });
+      if ((reg.data).length != 0)
+        {
+          //storeData('name')
+          navigation.navigate('Login')
+        }
+        else{
+          console.log(String(reg.error.status))
+          Alert.alert(String(reg.error.status),reg.error.detail)
+        }
     }
-  
+      else{
+        Alert.alert('Something wrong, please contact admin')
+      }
+      }
+    catch(e){
+      Alert.alert('Something wrong, please contact admin',e.message)
+    }
   }
 
   return (

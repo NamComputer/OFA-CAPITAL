@@ -47,9 +47,9 @@ export const getData = async key => {
 
 export const removeData = async key => {
   try {
-    const value = await AsyncStorage.removeItem(key)
-    console.log(value)
+    await AsyncStorage.removeItem(key)
+    // console.log(value)
   } catch (e) {
-    console.log(e)
+    console.log(`Error removing data for key ${key}:`, e)
   }
 }

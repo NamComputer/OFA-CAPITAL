@@ -26,7 +26,8 @@ export default function TransactionsScreen() {
             //console.log('Data api/transaction',userBalance.data[1],'result',temp)
           }
         } catch (e) {
-          console.error('Error fetching balance:', e);
+          Alert.alert('error', e.message)
+          console.error('Error fetching balance:', e.message);
         }
       };
          

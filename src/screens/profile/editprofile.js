@@ -5,6 +5,7 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  ScrollView
 } from 'react-native';
 import {Colors} from '../theme/color';
 import {withIAPContext} from 'react-native-iap';
@@ -26,7 +27,7 @@ const EditProfile = ({navigation}) => {
   const [isLoading, setLoading] = useState(true);
  
   const itemSKUs = Platform.select({
-    android: ['20','01','10'],
+    android: ['20','01','10','100','500'],
     ios: ['1stpayment_ios', '2ndpayment_ios'],
   });
 
@@ -35,6 +36,7 @@ const EditProfile = ({navigation}) => {
     try {
       await requestPurchase({skus: [productId]});
     } catch (error) {
+      Alert.alert('error', error.message)
       console.log('error', error);
       Alert.alert('Error occurred while making purchase');
     } finally {
@@ -69,6 +71,7 @@ const EditProfile = ({navigation}) => {
           
           
           } catch (error) {
+            Alert.alert('error', error.message)
             console.error(
               'An error occurred while completing transaction',
               error,
@@ -102,7 +105,7 @@ const EditProfile = ({navigation}) => {
         setProducts(result);
         setLoading(false);
       } catch (error) {
-        Alert.alert('Error fetching products');
+        Alert.alert('Error fetching products',error.message);
       }
     };
 
@@ -136,13 +139,7 @@ const EditProfile = ({navigation}) => {
 
       <View style={styles.body}>
         {!isLoading ? (
-          <>
-            {/* <View >
-              <View style={styles.heading}>
-                  <Text style={styles.text}>Unlock all Recipes</Text>
-                  <Text style={styles.subText}>Get unlimited access to 1000+ recipes</Text>
-              </View>
-          </View> */}
+          <ScrollView>
            
             {products.map((product, index) => (
               <ProductItem
@@ -152,7 +149,7 @@ const EditProfile = ({navigation}) => {
                 onPress={() => handlePurchase(product.productId)}
               />
             ))}
-          </>
+          </ScrollView>
         ) : (
           <></>
         )}
@@ -213,6 +210,7 @@ const styles = StyleSheet.create({
     color: 'black',
     overflow: 'hidden',
   },
+
 });
 
 export default withIAPContext(EditProfile);

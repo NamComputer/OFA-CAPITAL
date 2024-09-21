@@ -38,12 +38,12 @@ const BottomStackScreen = () => (
                                                                             <Image source={require('./assets/images/home.png')} />) }}/>
     <Tab.Screen name="Wallet" component={Wallet} options={{ headerShown: false, tabBarIcon:({color}) => (
                                                                             <Image source={require('./assets/images/Wallet.png')} />) }} />
-    <Tab.Screen name="Transactions" component={Transactions} options={{ headerShown: false, tabBarIcon:({color}) => (
+    <Tab.Screen name="History" component={Transactions} options={{ headerShown: false, tabBarIcon:({color}) => (
                                                                             <Image source={require('./assets/images/arrows.png')} />) }}/>
     <Tab.Screen name="Profile" component={Profile} options={{ headerShown: false, tabBarIcon:({color}) => (
                                                                             <Image source={require('./assets/images/user.png')} />) }}/>
-    <Tab.Screen name="Upload" component={UploadHistory} options={{ headerShown: false, tabBarIcon:({color}) => (
-                                                                            <Image source={require('./assets/images/Upload.png')} />) }}/>
+    <Tab.Screen name="Support" component={UploadHistory} options={{ headerShown: false, tabBarIcon:({color}) => (
+                                                                            <Image  style={{width:25,height:25}} source={require('./assets/images//icons8-heart-100.png')} />) }}/>
 
   </Tab.Navigator>
 );
