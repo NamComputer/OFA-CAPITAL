@@ -1,19 +1,18 @@
-import { StatusBar } from 'expo-status-bar';
+
 import { StyleSheet, Text, View, TouchableOpacity, Image, Dimensions, Alert } from 'react-native';
 import { RectangleButton } from '../components/RectangleButton';
 import { USER } from '../data/users';
 import { Colors } from '../theme/color';
 import { removeData } from '../helpers/asyncStorage';
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-
-import {getUser, posUser} from '../hooks';
 import { getData } from '../helpers/asyncStorage';
 import { useEffect, useState } from 'react';
 
+
+//export default function Profile
 export default function Profile({navigation}) {
   
+ 
   const [nameUser,setUser] = useState('')
 
 
@@ -42,12 +41,13 @@ export default function Profile({navigation}) {
       </View>
       <View style={styles.footer}>
           <RectangleButton title={'Log Out!'} onpress={()=>{
+            console.log('helllooo')
             removeData('loginToken')
             removeData('idUser')
             removeData('balance')
             removeData('tempBalance')
             removeData('nameUser')
-            navigation.pop()
+            navigation.navigate('Login')
             }} buttonColor={Colors.red} recBorderColor={Colors.bottomBar} recWidth={300} />
       </View>
       

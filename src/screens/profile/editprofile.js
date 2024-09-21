@@ -36,6 +36,7 @@ const EditProfile = ({navigation}) => {
     try {
       await requestPurchase({skus: [productId]});
     } catch (error) {
+      Alert.alert('error', error.message)
       console.log('error', error);
       Alert.alert('Error occurred while making purchase');
     } finally {
@@ -70,6 +71,7 @@ const EditProfile = ({navigation}) => {
           
           
           } catch (error) {
+            Alert.alert('error', error.message)
             console.error(
               'An error occurred while completing transaction',
               error,
@@ -103,7 +105,7 @@ const EditProfile = ({navigation}) => {
         setProducts(result);
         setLoading(false);
       } catch (error) {
-        Alert.alert('Error fetching products');
+        Alert.alert('Error fetching products',error.message);
       }
     };
 

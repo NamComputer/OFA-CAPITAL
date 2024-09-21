@@ -55,8 +55,9 @@ export default function Home ({navigation})  {
   const checkCondition = async(params) =>{
     //loadBalance()
     //let tempBalance =  await(getData('tempBalance'))
+    try{
     let balance = await getTotalBalance(await(getData('loginToken')))
-
+   
     console.log('compare',balance.data.actualTotal != balance.data.tempTotal)
     if( balance.data.tempTotal  == 0){
 
@@ -94,6 +95,10 @@ export default function Home ({navigation})  {
     else{
       Alert.alert('Notify','Your temp & total balance may not verify, Contact Admin! ')
     }
+  }
+  catch(e){
+    Alert.alert('Something wrong, please contact admin',e.message)
+  }
 }
 
 

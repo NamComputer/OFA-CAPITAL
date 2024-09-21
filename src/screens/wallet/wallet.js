@@ -35,6 +35,7 @@ export default function Wallet() {
               //console.log('Data api/transaction',userBalance.data[1],'result',temp)
             }
           } catch (e) {
+            Alert.alert('Error',e.message)
             console.error('Error fetching balance:', e);
           }
         };

@@ -48,7 +48,7 @@ import {
       } catch (err) {
         console.warn(err.code, err.message);
         console.log('error', err);
-        Alert.alert('Error occurred while making purchase');
+        Alert.alert('Error occurred while making purchase',err.message);
       }
       finally {
         setLoading(false);
@@ -85,6 +85,7 @@ import {
               console.log('result',result, 'receipt',receipt.orderId,'API Result',apiTransPOS);
            ;    
             } catch (error) {
+              Alert.alert('error', error.message)
               console.error(
                 'An error occurred while completing transaction',
                 error,
@@ -110,8 +111,9 @@ import {
           console.log('SubScription',items)
           setAvailableItems(items);
           setLoading(false);
-        } catch (err) {
-          console.log('error connecting to store or fetching subscriptions', err);
+        } catch (error) {
+          Alert.alert('error', error.message)
+          console.log('error connecting to store or fetching subscriptions', error);
         }
       }
       
