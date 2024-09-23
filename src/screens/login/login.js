@@ -18,15 +18,15 @@ import { devURL,productionURL } from '../helpers/fetch';
 import {posUserLogin} from '../hooks';
 import {getData, storeData} from '../helpers/asyncStorage';
 
-export function Login({navigation}) {
+export const Login = ({navigation}) => {
 
-
-  useEffect(() =>{
-  if( getData('appMode')==null){
-    console.log('Run 1st script')
-    storeData('appMode',productionURL)
+  const checkDataMode = async() =>{
+    if(await getData('appMode')==null){
+      storeData('appMode',devURL)
+    }
   }
-},[])
+  checkDataMode()
+  
   const [isChecked, setChecked] = useState(false);
   const [login, loading] = useState(false);
   const [user, setUser] = useState();
