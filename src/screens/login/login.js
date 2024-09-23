@@ -20,9 +20,13 @@ import {getData, storeData} from '../helpers/asyncStorage';
 
 export function Login({navigation}) {
 
+
+  useEffect(() =>{
   if( getData('appMode')==null){
+    console.log('Run 1st script')
     storeData('appMode',productionURL)
   }
+},[])
   const [isChecked, setChecked] = useState(false);
   const [login, loading] = useState(false);
   const [user, setUser] = useState();
@@ -30,7 +34,7 @@ export function Login({navigation}) {
   
 
   const checkUser = async () => {
-    
+    console.log('Check data mode',await getData('appMode')==null)
     try {
     const login = await posUserLogin({
       identity: user,
@@ -66,10 +70,10 @@ export function Login({navigation}) {
         onPress: async() => {
           if(await getData('appMode')==productionURL){
      
-            storeData('appMode',devURL)
+            storeData('appMode',productionURL)
           }
           else{
-            storeData('appMode',productionURL)
+            storeData('appMode',devURL)
           }       
         },
         
